@@ -3,11 +3,11 @@
 ## Ukończone:
 
 - [x] Docker
+- [x] Scala
+- [x] Kotlin
 
 ## Do zrealizowania:
 
-- [ ] Scala
-- [ ] Kotlin
 - [ ] GO
 - [ ] Frontend
 - [ ] Testy
