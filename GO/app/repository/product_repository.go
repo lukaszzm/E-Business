@@ -2,17 +2,8 @@ package repository
 
 import (
 	"go-commerce/app/model"
-
 	"gorm.io/gorm"
 )
-
-type ProductRepository interface {
-	Create(product *model.Product) error
-	FindAll(params ProductQueryParams) ([]model.Product, error)
-	FindByID(id uint) (*model.Product, error)
-	Update(product *model.Product) error
-	Delete(id uint) error
-}
 
 type ProductQueryParams struct {
 	CategoryID *uint
@@ -24,12 +15,69 @@ type ProductQueryParams struct {
 	PageSize   int
 }
 
+type ProductRepository interface {
+	Create(product *model.Product) error
+	FindAll(params ProductQueryParams) ([]model.Product, error)
+	FindByID(id uint) (*model.Product, error)
+	Update(product *model.Product) error
+	Delete(id uint) error
+}
+
 type productRepository struct {
 	db *gorm.DB
 }
 
 func NewProductRepository(db *gorm.DB) ProductRepository {
-	return &productRepository{db: db}
+	return &productRepository{
+		db: db,
+	}
+}
+
+func withCategoryFilter(categoryID *uint) func(db *gorm.DB) *gorm.DB {
+	return func(db *gorm.DB) *gorm.DB {
+		if categoryID != nil && *categoryID > 0 {
+			return db.Where("category_id = ?", *categoryID)
+		}
+		return db
+	}
+}
+
+func withPriceRange(minPrice, maxPrice *float64) func(db *gorm.DB) *gorm.DB {
+	return func(db *gorm.DB) *gorm.DB {
+		if minPrice != nil {
+			db = db.Where("price >= ?", *minPrice)
+		}
+		if maxPrice != nil {
+			db = db.Where("price <= ?", *maxPrice)
+		}
+		return db
+	}
+}
+
+func withSorting(sortBy, sortDir string) func(db *gorm.DB) *gorm.DB {
+	return func(db *gorm.DB) *gorm.DB {
+		if sortBy != "" {
+			direction := "asc"
+			if sortDir == "desc" {
+				direction = "desc"
+			}
+			return db.Order(sortBy + " " + direction)
+		}
+		return db.Order("id asc")
+	}
+}
+
+func withPagination(page, pageSize int) func(db *gorm.DB) *gorm.DB {
+	return func(db *gorm.DB) *gorm.DB {
+		if page <= 0 {
+			page = 1
+		}
+		if pageSize <= 0 {
+			pageSize = 10
+		}
+		offset := (page - 1) * pageSize
+		return db.Offset(offset).Limit(pageSize)
+	}
 }
 
 func (r *productRepository) Create(product *model.Product) error {
@@ -38,44 +86,21 @@ func (r *productRepository) Create(product *model.Product) error {
 
 func (r *productRepository) FindAll(params ProductQueryParams) ([]model.Product, error) {
 	var products []model.Product
-	query := r.db.Model(&model.Product{})
 
-	if params.CategoryID != nil {
-		query = query.Where("category_id = ?", *params.CategoryID)
-	}
+	err := r.db.Scopes(
+		withCategoryFilter(params.CategoryID),
+		withPriceRange(params.MinPrice, params.MaxPrice),
+		withSorting(params.SortBy, params.SortDir),
+		withPagination(params.Page, params.PageSize),
+	).Preload("Category").Find(&products).Error
 
-	if params.MinPrice != nil && params.MaxPrice != nil {
-		query = query.Where("price BETWEEN ? AND ?", *params.MinPrice, *params.MaxPrice)
-	} else if params.MinPrice != nil {
-		query = query.Where("price >= ?", *params.MinPrice)
-	} else if params.MaxPrice != nil {
-		query = query.Where("price <= ?", *params.MaxPrice)
-	}
-
-	if params.SortBy != "" {
-		direction := "ASC"
-		if params.SortDir == "desc" {
-			direction = "DESC"
-		}
-		query = query.Order(params.SortBy + " " + direction)
-	}
-
-	if params.Page > 0 && params.PageSize > 0 {
-		offset := (params.Page - 1) * params.PageSize
-		query = query.Offset(offset).Limit(params.PageSize)
-	}
-
-	err := query.Preload("Category").Find(&products).Error
 	return products, err
 }
 
 func (r *productRepository) FindByID(id uint) (*model.Product, error) {
 	var product model.Product
 	err := r.db.Preload("Category").First(&product, id).Error
-	if err != nil {
-		return nil, err
-	}
-	return &product, nil
+	return &product, err
 }
 
 func (r *productRepository) Update(product *model.Product) error {
