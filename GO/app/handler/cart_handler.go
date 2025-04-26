@@ -116,3 +116,16 @@ func (h *CartHandler) UpdateCartItem(c echo.Context) error {
 
 	return c.JSON(http.StatusOK, cartItem)
 }
+
+func (h *CartHandler) PlaceOrder(c echo.Context) error {
+	cartID, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, map[string]string{"error": "Invalid cart ID"})
+	}
+
+	if err := h.cartService.ClearCart(uint(cartID)); err != nil {
+		return c.JSON(http.StatusBadRequest, map[string]string{"error": err.Error()})
+	}
+
+	return c.JSON(http.StatusOK, map[string]string{"message": "Order placed successfully"})
+}

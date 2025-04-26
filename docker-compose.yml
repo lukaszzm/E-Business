@@ -1,0 +1,39 @@
+version: "3.8"
+
+services:
+  # API
+  server:
+    build:
+      context: ./GO
+      dockerfile: Dockerfile
+    container_name: go-server
+    ports:
+      - "8080:8080"
+    environment:
+      - CLIENT_URL=http://localhost:3000
+    volumes:
+      - ./GO:/app
+    networks:
+      - app-network
+    restart: unless-stopped
+
+  # Frontend
+  client:
+    build:
+      context: ./Frontend
+      dockerfile: Dockerfile
+    container_name: react-client
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./Frontend:/app
+      - /app/node_modules
+    depends_on:
+      - server
+    networks:
+      - app-network
+    restart: unless-stopped
+
+networks:
+  app-network:
+    driver: bridge

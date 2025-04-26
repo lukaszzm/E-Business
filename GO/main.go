@@ -43,7 +43,11 @@ func main() {
 
 	e.Use(middleware.Logger())
 	e.Use(middleware.Recover())
-	e.Use(middleware.CORS())
+
+	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
+		AllowOrigins: []string{cfg.Client.Url},
+		AllowHeaders: []string{echo.HeaderOrigin, echo.HeaderContentType, echo.HeaderAccept},
+	}))
 
 	e.POST("/products", productHandler.Create)
 	e.GET("/products", productHandler.GetAll)
@@ -58,6 +62,7 @@ func main() {
 
 	e.POST("/carts", cartHandler.Create)
 	e.GET("/carts/:id", cartHandler.GetByID)
+	e.POST("/carts/:id/place-order", cartHandler.PlaceOrder)
 	e.POST("/carts/:id/items", cartHandler.AddProduct)
 	e.PUT("/carts/:id/items/:itemId", cartHandler.UpdateCartItem)
 	e.DELETE("/carts/:id/items/:itemId", cartHandler.RemoveProduct)

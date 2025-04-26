@@ -14,6 +14,7 @@ import { Route as rootRoute } from './routes/__root'
 import { Route as LayoutImport } from './routes/_layout'
 import { Route as LayoutIndexImport } from './routes/_layout.index'
 import { Route as LayoutProductsImport } from './routes/_layout.products'
+import { Route as LayoutOrderConfirmationImport } from './routes/_layout.order-confirmation'
 import { Route as LayoutCartImport } from './routes/_layout.cart'
 import { Route as LayoutProductIdImport } from './routes/_layout.$productId'
 
@@ -33,6 +34,12 @@ const LayoutIndexRoute = LayoutIndexImport.update({
 const LayoutProductsRoute = LayoutProductsImport.update({
   id: '/products',
   path: '/products',
+  getParentRoute: () => LayoutRoute,
+} as any)
+
+const LayoutOrderConfirmationRoute = LayoutOrderConfirmationImport.update({
+  id: '/order-confirmation',
+  path: '/order-confirmation',
   getParentRoute: () => LayoutRoute,
 } as any)
 
@@ -73,6 +80,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LayoutCartImport
       parentRoute: typeof LayoutImport
     }
+    '/_layout/order-confirmation': {
+      id: '/_layout/order-confirmation'
+      path: '/order-confirmation'
+      fullPath: '/order-confirmation'
+      preLoaderRoute: typeof LayoutOrderConfirmationImport
+      parentRoute: typeof LayoutImport
+    }
     '/_layout/products': {
       id: '/_layout/products'
       path: '/products'
@@ -95,6 +109,7 @@ declare module '@tanstack/react-router' {
 interface LayoutRouteChildren {
   LayoutProductIdRoute: typeof LayoutProductIdRoute
   LayoutCartRoute: typeof LayoutCartRoute
+  LayoutOrderConfirmationRoute: typeof LayoutOrderConfirmationRoute
   LayoutProductsRoute: typeof LayoutProductsRoute
   LayoutIndexRoute: typeof LayoutIndexRoute
 }
@@ -102,6 +117,7 @@ interface LayoutRouteChildren {
 const LayoutRouteChildren: LayoutRouteChildren = {
   LayoutProductIdRoute: LayoutProductIdRoute,
   LayoutCartRoute: LayoutCartRoute,
+  LayoutOrderConfirmationRoute: LayoutOrderConfirmationRoute,
   LayoutProductsRoute: LayoutProductsRoute,
   LayoutIndexRoute: LayoutIndexRoute,
 }
@@ -113,6 +129,7 @@ export interface FileRoutesByFullPath {
   '': typeof LayoutRouteWithChildren
   '/$productId': typeof LayoutProductIdRoute
   '/cart': typeof LayoutCartRoute
+  '/order-confirmation': typeof LayoutOrderConfirmationRoute
   '/products': typeof LayoutProductsRoute
   '/': typeof LayoutIndexRoute
 }
@@ -120,6 +137,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/$productId': typeof LayoutProductIdRoute
   '/cart': typeof LayoutCartRoute
+  '/order-confirmation': typeof LayoutOrderConfirmationRoute
   '/products': typeof LayoutProductsRoute
   '/': typeof LayoutIndexRoute
 }
@@ -129,20 +147,28 @@ export interface FileRoutesById {
   '/_layout': typeof LayoutRouteWithChildren
   '/_layout/$productId': typeof LayoutProductIdRoute
   '/_layout/cart': typeof LayoutCartRoute
+  '/_layout/order-confirmation': typeof LayoutOrderConfirmationRoute
   '/_layout/products': typeof LayoutProductsRoute
   '/_layout/': typeof LayoutIndexRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '' | '/$productId' | '/cart' | '/products' | '/'
+  fullPaths:
+    | ''
+    | '/$productId'
+    | '/cart'
+    | '/order-confirmation'
+    | '/products'
+    | '/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/$productId' | '/cart' | '/products' | '/'
+  to: '/$productId' | '/cart' | '/order-confirmation' | '/products' | '/'
   id:
     | '__root__'
     | '/_layout'
     | '/_layout/$productId'
     | '/_layout/cart'
+    | '/_layout/order-confirmation'
     | '/_layout/products'
     | '/_layout/'
   fileRoutesById: FileRoutesById
@@ -174,6 +200,7 @@ export const routeTree = rootRoute
       "children": [
         "/_layout/$productId",
         "/_layout/cart",
+        "/_layout/order-confirmation",
         "/_layout/products",
         "/_layout/"
       ]
@@ -184,6 +211,10 @@ export const routeTree = rootRoute
     },
     "/_layout/cart": {
       "filePath": "_layout.cart.tsx",
+      "parent": "/_layout"
+    },
+    "/_layout/order-confirmation": {
+      "filePath": "_layout.order-confirmation.tsx",
       "parent": "/_layout"
     },
     "/_layout/products": {

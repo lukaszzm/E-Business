@@ -10,12 +10,17 @@ import (
 
 type Config struct {
 	Server    ServerConfig
+	Client    ClientConfig
 	DB        DBConfig
 	LogOutput io.Writer
 }
 
 type ServerConfig struct {
 	Port int
+}
+
+type ClientConfig struct {
+	Url string
 }
 
 type DBConfig struct {
@@ -28,6 +33,9 @@ func New() *Config {
 	return &Config{
 		Server: ServerConfig{
 			Port: 8080,
+		},
+		Client: ClientConfig{
+			Url: "http://localhost:3000",
 		},
 		DB: DBConfig{
 			DSN:           "go-commerce.db",

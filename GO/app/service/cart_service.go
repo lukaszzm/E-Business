@@ -9,6 +9,7 @@ import (
 
 type CartService interface {
 	CreateCart(cart *model.Cart) error
+	ClearCart(cartID uint) error
 	GetCartByID(id uint) (*model.Cart, error)
 	AddProductToCart(cartID, productID uint, quantity int) (*model.LineItem, error)
 	RemoveProductFromCart(cartID, itemID uint) error
@@ -40,6 +41,24 @@ func (s *cartService) CreateCart(cart *model.Cart) error {
 	}
 
 	return s.cartRepo.Create(cart)
+}
+
+func (s *cartService) ClearCart(cartID uint) error {
+	cart, err := s.cartRepo.FindByID(cartID)
+	if err != nil {
+		return errors.New("cart not found")
+	}
+
+	for i := range cart.LineItems {
+		lineItem := cart.LineItems[i]
+
+		err := s.cartRepo.DeleteLineItem(lineItem.ID)
+		if err != nil {
+			return err
+		}
+	}
+
+	return nil
 }
 
 func (s *cartService) GetCartByID(id uint) (*model.Cart, error) {

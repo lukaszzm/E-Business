@@ -5,11 +5,11 @@
 - [x] Docker
 - [x] Scala
 - [x] Kotlin
+- [x] GO
+- [x] Frontend
 
 ## Do zrealizowania:
 
-- [ ] GO
-- [ ] Frontend
 - [ ] Testy
 - [ ] Sonar
 - [ ] OAuth 2.0

@@ -8,6 +8,7 @@ import (
 
 type CartRepository interface {
 	Create(cart *model.Cart) error
+	Delete(cart *model.Cart) error
 	FindByID(id uint) (*model.Cart, error)
 	AddLineItem(item *model.LineItem) error
 	FindLineItem(cartID, itemID uint) (*model.LineItem, error)
@@ -27,6 +28,10 @@ func NewCartRepository(db *gorm.DB) CartRepository {
 
 func (r *cartRepository) Create(cart *model.Cart) error {
 	return r.db.Create(cart).Error
+}
+
+func (r *cartRepository) Delete(cart *model.Cart) error {
+	return r.db.Delete(cart).Error
 }
 
 func (r *cartRepository) FindByID(id uint) (*model.Cart, error) {
