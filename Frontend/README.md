@@ -1,3 +1,6 @@
+
+https://github.com/user-attachments/assets/e14397cc-093c-4964-93bd-8d34ded9b1af
+
 # Zad. 5 - Frontend
 
 Należy stworzyć aplikację kliencką wykorzystując bibliotekę React.js.
@@ -43,3 +46,5 @@ const BASE_URL = '<URL-do-serwera>'
 ```bash
 pnpm run start
 ```
+
+**Aby docker-compose.yml działał prawidłowo należy przenieść zawartość foldera ./docker-compose-files do katalogu głównego e-business**
