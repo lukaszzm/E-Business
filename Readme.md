@@ -7,10 +7,10 @@
 - [x] Kotlin
 - [x] GO
 - [x] Frontend
+- [x] Testy
 
 ## Do zrealizowania:
 
-- [ ] Testy
 - [ ] Sonar
 - [ ] OAuth 2.0
 - [ ] ChatGPT
