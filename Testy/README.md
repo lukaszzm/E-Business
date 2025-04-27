@@ -54,3 +54,11 @@ yarn test
 yarn e2e:browserstack
 yarn e2e:browserstack:mobile
 ```
+
+Testy E2E:
+- https://github.com/user-attachments/assets/3e946421-5e47-4840-9b2b-4e78ce47a057
+
+Testy jednostkowe:
+- <img width="760" alt="unit" src="https://github.com/user-attachments/assets/2ede9f53-461e-4fb2-953a-a4bd48976e25" />
+
+
