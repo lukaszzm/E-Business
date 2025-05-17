@@ -3,9 +3,9 @@ import { apiClient } from '@/api/client'
 import type { LineItem } from '@/types'
 
 interface AddToCartPayload {
-  productId: number
-  quantity: number
-  cartId?: number
+  productId: Readonly<number>
+  quantity: Readonly<number>
+  cartId?: Readonly<number>
 }
 
 export async function addToCart(

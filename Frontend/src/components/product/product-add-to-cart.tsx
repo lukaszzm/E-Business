@@ -5,9 +5,9 @@ import { useMutation } from '@tanstack/react-query'
 import { toast } from 'sonner'
 
 interface ProductAddToCartProps {
-  productId: number
-  stock: number
-  quantity?: number
+  productId: Readonly<number>
+  stock: Readonly<number>
+  quantity?: Readonly<number>
 }
 
 export function ProductAddToCart({
@@ -35,7 +35,7 @@ export function ProductAddToCart({
   return (
     <Button
       className="w-full"
-      disabled={isPending || !inStock}
+      disabled={isPending ?? !inStock}
       onClick={() => mutate()}
     >
       {inStock ? 'Add to Cart' : 'Out of Stock'}

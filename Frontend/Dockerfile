@@ -1,4 +1,4 @@
-FROM node:slim as build
+FROM node:slim AS build
 
 RUN corepack enable && corepack prepare pnpm@latest --activate
 

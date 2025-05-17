@@ -6,7 +6,7 @@ import { useNavigate } from '@tanstack/react-router'
 import { toast } from 'sonner'
 
 interface CartCheckoutButtonProps {
-  cartId: number
+  cartId: Readonly<number>
 }
 
 export function CartCheckoutButton({ cartId }: CartCheckoutButtonProps) {

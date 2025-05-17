@@ -1,9 +1,9 @@
 import { CartCheckoutButton } from '@/components/cart/cart-checkout-button'
 
 interface CartSummaryProps {
-  cartId: number
-  totalLineItems: number
-  totalPrice: number
+  cartId: Readonly<number>
+  totalLineItems: Readonly<number>
+  totalPrice: Readonly<number>
 }
 
 export function CartSummary({

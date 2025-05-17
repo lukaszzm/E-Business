@@ -3,7 +3,7 @@ import type { Product } from '@/types'
 import { Link } from '@tanstack/react-router'
 
 interface ProductCardProps {
-  product: Product
+  product: Readonly<Product>
 }
 
 const MOCKED_STOCK = 34

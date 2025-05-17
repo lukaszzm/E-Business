@@ -1,7 +1,7 @@
 import type { LineItem } from '@/types'
 
 interface CartLineItemsProps {
-  lineItems: LineItem[] | undefined
+  lineItems: ReadonlyArray<LineItem> | undefined
 }
 
 export function CartLineItems({ lineItems }: CartLineItemsProps) {
