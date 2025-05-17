@@ -1,5 +1,5 @@
-import { describe, it, expect, vi, beforeEach } from "vitest";
-import { Coupons, type Coupon } from "./config"; // This import should match your actual file structure
+import { describe, it, expect } from "vitest";
+import type { Coupon } from "./config";
 import { calculateDiscount } from "./calculate-discount";
 
 describe("calculateDiscount", () => {

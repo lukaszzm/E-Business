@@ -54,7 +54,7 @@ describe("Product List", () => {
 
     cy.get(".inventory_item_name").then(($items) => {
       const texts = $items.map((i, el) => Cypress.$(el).text()).get();
-      const sorted = [...texts].sort();
+      const sorted = texts.sort((a, b) => a.localeCompare(b));
       expect(texts).to.deep.equal(sorted);
     });
   });
