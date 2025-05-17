@@ -4,7 +4,7 @@ interface CartLineItemsProps {
   lineItems: ReadonlyArray<LineItem> | undefined
 }
 
-export function CartLineItems({ lineItems }: CartLineItemsProps) {
+export function CartLineItems({ lineItems }: Readonly<CartLineItemsProps>) {
   if (!lineItems || lineItems.length === 0) {
     return (
       <div className="text-center text-muted-foreground w-full">

@@ -5,16 +5,16 @@ import { useMutation } from '@tanstack/react-query'
 import { toast } from 'sonner'
 
 interface ProductAddToCartProps {
-  productId: Readonly<number>
-  stock: Readonly<number>
-  quantity?: Readonly<number>
+  productId: number
+  stock: number
+  quantity?: number
 }
 
 export function ProductAddToCart({
   productId,
   stock,
   quantity = 1,
-}: ProductAddToCartProps) {
+}: Readonly<ProductAddToCartProps>) {
   const inStock = stock > 0
 
   const { mutate, isPending } = useMutation({

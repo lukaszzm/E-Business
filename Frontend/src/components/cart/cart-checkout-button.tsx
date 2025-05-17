@@ -6,10 +6,12 @@ import { useNavigate } from '@tanstack/react-router'
 import { toast } from 'sonner'
 
 interface CartCheckoutButtonProps {
-  cartId: Readonly<number>
+  cartId: number
 }
 
-export function CartCheckoutButton({ cartId }: CartCheckoutButtonProps) {
+export function CartCheckoutButton({
+  cartId,
+}: Readonly<CartCheckoutButtonProps>) {
   const navigate = useNavigate()
 
   const { mutate, isPending } = useMutation({

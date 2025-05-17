@@ -1,16 +1,16 @@
 import { CartCheckoutButton } from '@/components/cart/cart-checkout-button'
 
 interface CartSummaryProps {
-  cartId: Readonly<number>
-  totalLineItems: Readonly<number>
-  totalPrice: Readonly<number>
+  cartId: number
+  totalLineItems: number
+  totalPrice: number
 }
 
 export function CartSummary({
   cartId,
   totalLineItems,
   totalPrice,
-}: CartSummaryProps) {
+}: Readonly<CartSummaryProps>) {
   return (
     <div className="flex flex-col gap-4 p-4 min-w-sm">
       <div className="flex flex-col gap-2 p-4 rounded-lg border border-border">

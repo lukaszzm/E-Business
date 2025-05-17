@@ -3,14 +3,14 @@ import type { Product } from '@/types'
 import { Link } from '@tanstack/react-router'
 
 interface ProductCardProps {
-  product: Readonly<Product>
+  product: Product
 }
 
 const MOCKED_STOCK = 34
 
 export function ProductCard({
   product: { id, name, price },
-}: ProductCardProps) {
+}: Readonly<ProductCardProps>) {
   return (
     <div className="group relative rounded-lg border bg-card text-card-foreground shadow transition-all hover:shadow-md max-w-64">
       <div className="relative aspect-square overflow-hidden rounded-t-lg">
