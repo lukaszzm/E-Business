@@ -6,6 +6,7 @@ import (
 
 	"github.com/labstack/echo/v4"
 
+	"go-commerce/app/constants"
 	"go-commerce/app/model"
 	"go-commerce/app/service"
 )
@@ -23,7 +24,7 @@ func NewCategoryHandler(categoryService service.CategoryService) *CategoryHandle
 func (h *CategoryHandler) Create(c echo.Context) error {
 	category := new(model.Category)
 	if err := c.Bind(category); err != nil {
-		return c.JSON(http.StatusBadRequest, map[string]string{"error": "Invalid category data"})
+		return c.JSON(http.StatusBadRequest, map[string]string{"error": constants.InvalidCategoryData})
 	}
 
 	if err := h.categoryService.CreateCategory(category); err != nil {
@@ -45,12 +46,12 @@ func (h *CategoryHandler) GetAll(c echo.Context) error {
 func (h *CategoryHandler) GetByID(c echo.Context) error {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
-		return c.JSON(http.StatusBadRequest, map[string]string{"error": "Invalid category ID"})
+		return c.JSON(http.StatusBadRequest, map[string]string{"error": constants.InvalidCategoryId})
 	}
 
 	category, err := h.categoryService.GetCategoryByID(uint(id))
 	if err != nil {
-		return c.JSON(http.StatusNotFound, map[string]string{"error": "Category not found"})
+		return c.JSON(http.StatusNotFound, map[string]string{"error": constants.CategoryNotFound})
 	}
 
 	return c.JSON(http.StatusOK, category)
@@ -59,7 +60,7 @@ func (h *CategoryHandler) GetByID(c echo.Context) error {
 func (h *CategoryHandler) GetProducts(c echo.Context) error {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
-		return c.JSON(http.StatusBadRequest, map[string]string{"error": "Invalid category ID"})
+		return c.JSON(http.StatusBadRequest, map[string]string{"error": constants.InvalidCategoryId})
 	}
 
 	products, err := h.categoryService.GetProductsByCategory(uint(id))

@@ -6,6 +6,7 @@ import (
 
 	"github.com/labstack/echo/v4"
 
+	"go-commerce/app/constants"
 	"go-commerce/app/model"
 	"go-commerce/app/repository"
 	"go-commerce/app/service"
@@ -24,7 +25,7 @@ func NewProductHandler(productService service.ProductService) *ProductHandler {
 func (h *ProductHandler) Create(c echo.Context) error {
 	product := new(model.Product)
 	if err := c.Bind(product); err != nil {
-		return c.JSON(http.StatusBadRequest, map[string]string{"error": "Invalid product data"})
+		return c.JSON(http.StatusBadRequest, map[string]string{"error": constants.InvalidCategoryData})
 	}
 
 	if err := h.productService.CreateProduct(product); err != nil {
@@ -72,12 +73,12 @@ func (h *ProductHandler) GetAll(c echo.Context) error {
 func (h *ProductHandler) GetByID(c echo.Context) error {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
-		return c.JSON(http.StatusBadRequest, map[string]string{"error": "Invalid Product ID"})
+		return c.JSON(http.StatusBadRequest, map[string]string{"error": constants.InvalidProductId})
 	}
 
 	product, err := h.productService.GetProductByID(uint(id))
 	if err != nil {
-		return c.JSON(http.StatusNotFound, map[string]string{"error": "Product not found"})
+		return c.JSON(http.StatusNotFound, map[string]string{"error": constants.ProductNotFound})
 	}
 
 	return c.JSON(http.StatusOK, product)
@@ -86,12 +87,12 @@ func (h *ProductHandler) GetByID(c echo.Context) error {
 func (h *ProductHandler) Update(c echo.Context) error {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
-		return c.JSON(http.StatusBadRequest, map[string]string{"error": "Invalid Product ID"})
+		return c.JSON(http.StatusBadRequest, map[string]string{"error": constants.InvalidProductId})
 	}
 
 	product := new(model.Product)
 	if err := c.Bind(product); err != nil {
-		return c.JSON(http.StatusBadRequest, map[string]string{"error": "Invalid product data"})
+		return c.JSON(http.StatusBadRequest, map[string]string{"error": constants.InvalidProductData})
 	}
 
 	if err := h.productService.UpdateProduct(uint(id), product); err != nil {
@@ -104,12 +105,12 @@ func (h *ProductHandler) Update(c echo.Context) error {
 func (h *ProductHandler) Delete(c echo.Context) error {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
-		return c.JSON(http.StatusBadRequest, map[string]string{"error": "Invalid Product ID"})
+		return c.JSON(http.StatusBadRequest, map[string]string{"error": constants.InvalidProductId})
 	}
 
 	if err := h.productService.DeleteProduct(uint(id)); err != nil {
 		return c.JSON(http.StatusBadRequest, map[string]string{"error": err.Error()})
 	}
 
-	return c.JSON(http.StatusOK, map[string]string{"message": "Product deleted successfully"})
+	return c.JSON(http.StatusOK, map[string]string{"message": constants.ProductDeleted})
 }

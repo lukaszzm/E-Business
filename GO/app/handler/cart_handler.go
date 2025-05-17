@@ -6,6 +6,7 @@ import (
 
 	"github.com/labstack/echo/v4"
 
+	"go-commerce/app/constants"
 	"go-commerce/app/model"
 	"go-commerce/app/service"
 )
@@ -23,7 +24,7 @@ func NewCartHandler(cartService service.CartService) *CartHandler {
 func (h *CartHandler) Create(c echo.Context) error {
 	cart := new(model.Cart)
 	if err := c.Bind(cart); err != nil {
-		return c.JSON(http.StatusBadRequest, map[string]string{"error": "Invalid cart data"})
+		return c.JSON(http.StatusBadRequest, map[string]string{"error": constants.InvalidCartData})
 	}
 
 	if err := h.cartService.CreateCart(cart); err != nil {
@@ -36,12 +37,12 @@ func (h *CartHandler) Create(c echo.Context) error {
 func (h *CartHandler) GetByID(c echo.Context) error {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
-		return c.JSON(http.StatusBadRequest, map[string]string{"error": "Invalid cart ID"})
+		return c.JSON(http.StatusBadRequest, map[string]string{"error": constants.InvalidCartId})
 	}
 
 	cart, err := h.cartService.GetCartByID(uint(id))
 	if err != nil {
-		return c.JSON(http.StatusNotFound, map[string]string{"error": "Cart not found"})
+		return c.JSON(http.StatusNotFound, map[string]string{"error": constants.CartNotFound})
 	}
 
 	return c.JSON(http.StatusOK, cart)
@@ -50,7 +51,7 @@ func (h *CartHandler) GetByID(c echo.Context) error {
 func (h *CartHandler) AddProduct(c echo.Context) error {
 	cartID, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
-		return c.JSON(http.StatusBadRequest, map[string]string{"error": "Invalid cart ID"})
+		return c.JSON(http.StatusBadRequest, map[string]string{"error": constants.InvalidCartId})
 	}
 
 	type AddItemRequest struct {
@@ -60,7 +61,7 @@ func (h *CartHandler) AddProduct(c echo.Context) error {
 
 	request := new(AddItemRequest)
 	if err := c.Bind(request); err != nil {
-		return c.JSON(http.StatusBadRequest, map[string]string{"error": "Invalid cart data"})
+		return c.JSON(http.StatusBadRequest, map[string]string{"error": constants.InvalidCartData})
 	}
 
 	cartItem, err := h.cartService.AddProductToCart(uint(cartID), request.ProductID, request.Quantity)
@@ -74,30 +75,30 @@ func (h *CartHandler) AddProduct(c echo.Context) error {
 func (h *CartHandler) RemoveProduct(c echo.Context) error {
 	cartID, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
-		return c.JSON(http.StatusBadRequest, map[string]string{"error": "Invalid cart ID"})
+		return c.JSON(http.StatusBadRequest, map[string]string{"error": constants.InvalidCartId})
 	}
 
 	itemID, err := strconv.Atoi(c.Param("itemId"))
 	if err != nil {
-		return c.JSON(http.StatusBadRequest, map[string]string{"error": "Invalid item ID"})
+		return c.JSON(http.StatusBadRequest, map[string]string{"error": constants.InvalidLineItemId})
 	}
 
 	if err := h.cartService.RemoveProductFromCart(uint(cartID), uint(itemID)); err != nil {
 		return c.JSON(http.StatusBadRequest, map[string]string{"error": err.Error()})
 	}
 
-	return c.JSON(http.StatusOK, map[string]string{"message": "Product deleted successfully"})
+	return c.JSON(http.StatusOK, map[string]string{"message": constants.ProductDeleted})
 }
 
 func (h *CartHandler) UpdateCartItem(c echo.Context) error {
 	cartID, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
-		return c.JSON(http.StatusBadRequest, map[string]string{"error": "Invalid cart ID"})
+		return c.JSON(http.StatusBadRequest, map[string]string{"error": constants.InvalidCartId})
 	}
 
 	itemID, err := strconv.Atoi(c.Param("itemId"))
 	if err != nil {
-		return c.JSON(http.StatusBadRequest, map[string]string{"error": "Invalid item ID"})
+		return c.JSON(http.StatusBadRequest, map[string]string{"error": constants.InvalidLineItemId})
 	}
 
 	type UpdateItemRequest struct {
@@ -106,7 +107,7 @@ func (h *CartHandler) UpdateCartItem(c echo.Context) error {
 
 	request := new(UpdateItemRequest)
 	if err := c.Bind(request); err != nil {
-		return c.JSON(http.StatusBadRequest, map[string]string{"error": "Invalid cart data"})
+		return c.JSON(http.StatusBadRequest, map[string]string{"error": constants.InvalidCartData})
 	}
 
 	cartItem, err := h.cartService.UpdateLineItemQuantity(uint(cartID), uint(itemID), request.Quantity)
@@ -120,12 +121,12 @@ func (h *CartHandler) UpdateCartItem(c echo.Context) error {
 func (h *CartHandler) PlaceOrder(c echo.Context) error {
 	cartID, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
-		return c.JSON(http.StatusBadRequest, map[string]string{"error": "Invalid cart ID"})
+		return c.JSON(http.StatusBadRequest, map[string]string{"error": constants.InvalidCartId})
 	}
 
 	if err := h.cartService.ClearCart(uint(cartID)); err != nil {
 		return c.JSON(http.StatusBadRequest, map[string]string{"error": err.Error()})
 	}
 
-	return c.JSON(http.StatusOK, map[string]string{"message": "Order placed successfully"})
+	return c.JSON(http.StatusOK, map[string]string{"message": constants.OrderPlaced})
 }

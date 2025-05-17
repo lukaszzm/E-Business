@@ -49,23 +49,35 @@ func main() {
 		AllowHeaders: []string{echo.HeaderOrigin, echo.HeaderContentType, echo.HeaderAccept},
 	}))
 
-	e.POST("/products", productHandler.Create)
-	e.GET("/products", productHandler.GetAll)
-	e.GET("/products/:id", productHandler.GetByID)
-	e.PUT("/products/:id", productHandler.Update)
-	e.DELETE("/products/:id", productHandler.Delete)
+	const ProductsRoute = "/products"
+	const ProductByIdRoute = "/products/:id"
 
-	e.POST("/categories", categoryHandler.Create)
-	e.GET("/categories", categoryHandler.GetAll)
-	e.GET("/categories/:id", categoryHandler.GetByID)
-	e.GET("/categories/:id/products", categoryHandler.GetProducts)
+	e.POST(ProductsRoute, productHandler.Create)
+	e.GET(ProductsRoute, productHandler.GetAll)
+	e.GET(ProductByIdRoute, productHandler.GetByID)
+	e.PUT(ProductByIdRoute, productHandler.Update)
+	e.DELETE(ProductByIdRoute, productHandler.Delete)
 
-	e.POST("/carts", cartHandler.Create)
-	e.GET("/carts/:id", cartHandler.GetByID)
-	e.POST("/carts/:id/place-order", cartHandler.PlaceOrder)
-	e.POST("/carts/:id/items", cartHandler.AddProduct)
-	e.PUT("/carts/:id/items/:itemId", cartHandler.UpdateCartItem)
-	e.DELETE("/carts/:id/items/:itemId", cartHandler.RemoveProduct)
+	const CategoriesRoute = "/categories"
+	const CategoryByIdRoute = "/categories/:id"
+
+	e.POST(CategoriesRoute, categoryHandler.Create)
+	e.GET(CategoriesRoute, categoryHandler.GetAll)
+	e.GET(CategoryByIdRoute, categoryHandler.GetByID)
+	e.GET(CategoryByIdRoute, categoryHandler.GetProducts)
+
+	const CartsRoute = "/carts"
+	const CartByIdRoute = "/carts/:id"
+	const PlaceOrderRoute = "/carts/:id/place-order"
+	const LineItemsRoute = "/carts/:id/items"
+	const LineItemByIdRoute = "/carts/:id/items/:itemId"
+
+	e.POST(CartsRoute, cartHandler.Create)
+	e.GET(CartByIdRoute, cartHandler.GetByID)
+	e.POST(PlaceOrderRoute, cartHandler.PlaceOrder)
+	e.POST(LineItemsRoute, cartHandler.AddProduct)
+	e.PUT(LineItemByIdRoute, cartHandler.UpdateCartItem)
+	e.DELETE(LineItemByIdRoute, cartHandler.RemoveProduct)
 
 	serverPort := strconv.Itoa(cfg.Server.Port)
 	e.Logger.Fatal(e.Start(":" + serverPort))
